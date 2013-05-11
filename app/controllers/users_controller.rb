@@ -31,6 +31,11 @@ class UsersController < ApplicationController
   	@user = User.new(params[:user])
     if @user.save
       # Handle a successful save.
+
+      respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @user }
+    end
     else
       render 'new'
     end
@@ -49,7 +54,7 @@ class UsersController < ApplicationController
       if @user.save
         format.html {
           sign_in @user
-          redirect_to @user, notice: 'Welcome to the Sample App!'
+          redirect_to @user, notice: 'Welcome to the Talkie App!'
         }
         format.json { render json: @user, status: :created, location: @user }
       else
@@ -77,10 +82,16 @@ class UsersController < ApplicationController
     end
   end
 
+  # DELETE /users/1
+  # DELETE /users/1.json
   def destroy
     User.find(params[:id]).destroy
     flash[:success] = "User destroyed."
-    redirect_to users_url
+
+    respond_to do |format|
+      format.html { redirect_to users_url }
+      format.json { head :no_content }
+    end
   end
 
   private

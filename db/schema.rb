@@ -11,7 +11,58 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130506043541) do
+ActiveRecord::Schema.define(:version => 20130511181446) do
+
+  create_table "article_chunk_maps", :force => true do |t|
+    t.integer  "article_id"
+    t.integer  "chunk_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "articles", :force => true do |t|
+    t.integer  "source_id"
+    t.string   "author"
+    t.string   "title"
+    t.string   "preview"
+    t.string   "image_url"
+    t.string   "article_url"
+    t.text     "body"
+    t.integer  "preview_chunks"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "chunks", :force => true do |t|
+    t.string   "audio_url"
+    t.text     "body"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "devices", :force => true do |t|
+    t.string   "device_guid"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "sources", :force => true do |t|
+    t.string   "name"
+    t.string   "image_url"
+    t.string   "favicon_url"
+    t.string   "description"
+    t.string   "rss_url"
+    t.string   "source_url"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  create_table "user_device_maps", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "device_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "name"
