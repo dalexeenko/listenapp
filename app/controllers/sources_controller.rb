@@ -4,8 +4,6 @@ class SourcesController < ApplicationController
   def index
     @sources = Source.all
 
-    @sources = params[:since_id]
-
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @sources }
