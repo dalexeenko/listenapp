@@ -59,7 +59,7 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
 
     respond_to do |format|
-      if @Article.update_attributes(params[:article])
+      if @article.update_attributes(params[:article])
         format.html { redirect_to @article, notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
@@ -73,7 +73,7 @@ class ArticlesController < ApplicationController
   # DELETE /articles/1.json
   def destroy
     @article = Article.find(params[:id])
-    @Article.destroy
+    @article.destroy
 
     respond_to do |format|
       format.html { redirect_to articles_url }

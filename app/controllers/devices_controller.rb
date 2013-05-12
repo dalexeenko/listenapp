@@ -43,7 +43,7 @@ class DevicesController < ApplicationController
     @device = Device.new(params[:device])
 
     respond_to do |format|
-      if @Device.save
+      if @device.save
         format.html { redirect_to @device, notice: 'Device was successfully created.' }
         format.json { render json: @device, status: :created, location: @device }
       else
@@ -59,7 +59,7 @@ class DevicesController < ApplicationController
     @device = Device.find(params[:id])
 
     respond_to do |format|
-      if @Device.update_attributes(params[:device])
+      if @device.update_attributes(params[:device])
         format.html { redirect_to @device, notice: 'Device was successfully updated.' }
         format.json { head :no_content }
       else
@@ -73,7 +73,7 @@ class DevicesController < ApplicationController
   # DELETE /devices/1.json
   def destroy
     @device = Device.find(params[:id])
-    @Device.destroy
+    @device.destroy
 
     respond_to do |format|
       format.html { redirect_to devices_url }

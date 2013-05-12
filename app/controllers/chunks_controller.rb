@@ -43,7 +43,7 @@ class ChunksController < ApplicationController
     @chunk = Chunk.new(params[:chunk])
 
     respond_to do |format|
-      if @Chunk.save
+      if @chunk.save
         format.html { redirect_to @chunk, notice: 'Chunk was successfully created.' }
         format.json { render json: @chunk, status: :created, location: @chunk }
       else
@@ -59,7 +59,7 @@ class ChunksController < ApplicationController
     @chunk = Chunk.find(params[:id])
 
     respond_to do |format|
-      if @Chunk.update_attributes(params[:chunk])
+      if @chunk.update_attributes(params[:chunk])
         format.html { redirect_to @chunk, notice: 'Chunk was successfully updated.' }
         format.json { head :no_content }
       else
@@ -73,7 +73,7 @@ class ChunksController < ApplicationController
   # DELETE /chunks/1.json
   def destroy
     @chunk = Chunk.find(params[:id])
-    @Chunk.destroy
+    @chunk.destroy
 
     respond_to do |format|
       format.html { redirect_to chunks_url }

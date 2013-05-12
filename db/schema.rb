@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130511181446) do
+ActiveRecord::Schema.define(:version => 20130511222113) do
 
   create_table "article_chunk_maps", :force => true do |t|
     t.integer  "article_id"
@@ -24,13 +24,13 @@ ActiveRecord::Schema.define(:version => 20130511181446) do
     t.integer  "source_id"
     t.string   "author"
     t.string   "title"
-    t.string   "preview"
+    t.text     "preview",        :limit => 255
     t.string   "image_url"
     t.string   "article_url"
     t.text     "body"
     t.integer  "preview_chunks"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   create_table "chunks", :force => true do |t|
