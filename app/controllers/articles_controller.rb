@@ -5,8 +5,8 @@ class ArticlesController < ApplicationController
     @articles = Article.all
 
     respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @articles }
+     format.html # index.html.erb
+     format.json { render json: @articles.to_json(:include => :chunks) }
     end
   end
 

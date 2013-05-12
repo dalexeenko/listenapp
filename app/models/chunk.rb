@@ -11,4 +11,5 @@
 
 class Chunk < ActiveRecord::Base
   attr_accessible :audio_url, :body
+  belongs_to :article
 end

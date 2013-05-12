@@ -17,4 +17,5 @@
 
 class Article < ActiveRecord::Base
   attr_accessible :article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title
+  has_many :chunks
 end
