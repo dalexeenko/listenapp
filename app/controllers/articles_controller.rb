@@ -2,7 +2,14 @@ class ArticlesController < ApplicationController
   # GET /articles
   # GET /articles.json
   def index
-    @articles = Article.all
+    params[:count] ||= 3
+    params[:since_id]  ||= -1
+    params[:max_id] ||= 10000
+
+    @articles = Article.find :all,
+                             :conditions => ['id >= ? AND id <= ?', params[:since_id], params[:max_id]],
+                             :limit => params[:count],
+                             :order => 'created_at desc'
 
     respond_to do |format|
      format.html # index.html.erb
