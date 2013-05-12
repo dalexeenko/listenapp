@@ -3,8 +3,8 @@ class ArticlesController < ApplicationController
   # GET /articles.json
   def index
     params[:count] ||= 3
-    params[:since_id]  ||= -1
-    params[:max_id] ||= 10000
+    params[:since_id]  ||= Article.first
+    params[:max_id] ||= Article.last
 
     @articles = Article.find :all,
                              :conditions => ['id >= ? AND id <= ?', params[:since_id], params[:max_id]],
