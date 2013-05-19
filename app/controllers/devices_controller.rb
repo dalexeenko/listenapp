@@ -1,4 +1,7 @@
 class DevicesController < ApplicationController
+  before_filter :signed_in_user
+  before_filter :admin_user, only: [:create, :destroy]
+
   # GET /devices
   # GET /devices.json
   def index

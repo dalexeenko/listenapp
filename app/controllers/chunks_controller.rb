@@ -1,4 +1,7 @@
 class ChunksController < ApplicationController
+  before_filter :signed_in_user
+  before_filter :admin_user, only: [:create, :destroy]
+
   # GET /chunks
   # GET /chunks.json
   def index

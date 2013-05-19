@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  protect_from_forgery :except => :create 
   include SessionsHelper
 
   # Force signout to prevent CSRF attacks

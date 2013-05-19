@@ -21,6 +21,29 @@ module SessionsHelper
     user == current_user
   end
 
+  def signed_in_user
+    unless signed_in?
+      respond_to do |format|
+        redirect = Proc.new do
+          store_location
+          redirect_to signin_url, notice: "Please sign in."
+        end
+
+        format.html { redirect }
+        format.json { render :json => [], :status => :unauthorized }
+      end
+    end
+  end
+
+  def admin_user
+    unless current_user.admin?
+      respond_to do |format|
+        format.html { redirect_to(root_path) }
+        format.json { render :json => [], :status => :forbidden }
+      end      
+    end
+  end
+
   def sign_out
     self.current_user = nil
     cookies.delete(:remember_token)
