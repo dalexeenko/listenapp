@@ -16,6 +16,7 @@ end
 
 group :development do
   gem 'annotate', '2.5.0'
+  gem 'taps', :require => false
 end
 
 # Gems used only for assets and not required

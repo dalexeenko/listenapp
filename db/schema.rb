@@ -58,13 +58,6 @@ ActiveRecord::Schema.define(:version => 20130512034736) do
     t.datetime "updated_at",  :null => false
   end
 
-  create_table "user_device_maps", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "device_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
-  end
-
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"

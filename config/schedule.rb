@@ -19,6 +19,6 @@
 
 # Learn more: http://github.com/javan/whenever
 
-every 1.hour do
-	runner "Article.update_from_feed"
+every :hour do
+	runner "Article.update_from_feed('http://feeds.feedburner.com/TechCrunch/')"
 end

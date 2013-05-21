@@ -20,15 +20,16 @@ class Article < ActiveRecord::Base
   has_many :chunks
 
   def self.update_from_feed(feed_url)
-  	feed_url = "http://feeds.feedburner.com/TechCrunch/"
   	feed = Feedzirra::Feed.fetch_and_parse(feed_url)
   	feed.entries.each do |entry|
-  		unless exists? :article_url => entry.url
+  		unless exists? :article_url => entry.entry_id
   			create!(
+  				:source_id => 13,
+  				:author => entry.author,
   				:title => entry.title,
-  				:preview => entry.summary,
-  				:article_url => entry.url,
-  				:body => entry.content
+  				:preview => ActionView::Base.full_sanitizer.sanitize(entry.summary),
+  				:article_url => entry.entry_id,
+  				:body => ActionView::Base.full_sanitizer.sanitize(entry.content)
   			)
   		end
   	end
