@@ -8,6 +8,8 @@ gem 'will_paginate', '3.0.3'
 gem 'bootstrap-will_paginate', '0.0.6'
 gem 'whenever', :require => false
 gem "feedzirra"
+gem "s3", "~> 0.3.11"
+gem "proxies", "~> 0.2.1"
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
