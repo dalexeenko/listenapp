@@ -42,7 +42,8 @@ class Article < ActiveRecord::Base
 
   def self.populate_articles
     articles = Article.find :all,
-                            :limit => 3
+                            :limit => 3,
+                            :order => 'created_at desc'
 
     articles.each do |article|
       title = article.title
