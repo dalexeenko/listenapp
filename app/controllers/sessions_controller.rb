@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
         sign_in user
 
         format.html { redirect_back_or user }
-        format.json { render :json => { :success => true }, :status => :found }
+        format.json { render :json => { :success => true }, :status => :ok }
       else
         format.html {
           flash.now[:error] = 'Invalid email/password combination'
