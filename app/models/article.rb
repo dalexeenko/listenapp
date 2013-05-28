@@ -86,10 +86,23 @@ class Article < ActiveRecord::Base
     bucket = amazon.buckets.find('talkieapp')
     url = 'http://192.20.225.36' + redirectLocation
 
-    download = open(url)
+    #open('temp.wav', 'wb') do |file|
+    #  file << open(url).read
+    #end
 
-    file = bucket.objects.build(SecureRandom.uuid + '.wav')
-    file.content = (File.read download)
+    wavfile = Tempfile.new(".wav")
+    wavfile.binmode
+
+    open(url) do |f|
+      wavfile << f.read
+    end
+
+    wavfile.close
+
+    mp3 = convert_tempfile(wavfile)
+
+    file = bucket.objects.build(SecureRandom.uuid + '.mp3')
+    file.content = (File.read mp3)
 
     if file.save
       # Make a new ActiveRecord::Base class for this
@@ -98,5 +111,22 @@ class Article < ActiveRecord::Base
     end
 
     file.url
+  end
+
+  def self.convert_tempfile(tempfile)
+    dst = Tempfile.new(".mp3")
+
+    cmd_args = [File.expand_path(tempfile.path), File.expand_path(dst.path)]
+    system("lame", *cmd_args)
+
+    dst.binmode
+    #io = StringIO.new(dst.read)
+    #dst.close
+
+    #io.original_filename = "sound.mp3"
+    #io.content_type = "audio/mpeg"
+
+    #io
+    dst.path
   end
 end
