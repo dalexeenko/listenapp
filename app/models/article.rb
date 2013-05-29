@@ -117,7 +117,7 @@ class Article < ActiveRecord::Base
     dst = Tempfile.new(".mp3")
 
     cmd_args = [File.expand_path(tempfile.path), File.expand_path(dst.path)]
-    system("lame", *cmd_args)
+    system("bin/lame", *cmd_args)
 
     dst.binmode
     #io = StringIO.new(dst.read)
