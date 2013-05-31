@@ -32,7 +32,7 @@ class Article < ActiveRecord::Base
   				:source_id => 13,
   				:author => entry.author,
   				:title => entry.title,
-          :image_url => (Nokogiri(e.summary)/"img").map{ |i| i['src'] },
+          :image_url => (Nokogiri(entry.summary)/"img").map{ |i| i['src'] },
   				:preview => ActionView::Base.full_sanitizer.sanitize(entry.summary),
   				:article_url => entry.entry_id,
   				:body => ActionView::Base.full_sanitizer.sanitize(entry.content)
