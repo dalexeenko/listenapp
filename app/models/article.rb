@@ -19,6 +19,7 @@ require "net/http"
 require "uri"
 require 'open-uri'
 require 's3'
+require 'htmlentities'
 
 include ActionView::Helpers::TextHelper
 
@@ -75,9 +76,9 @@ class Article < ActiveRecord::Base
           :author => entry.author,
           :title => entry.title.strip,
           :image_url => (Nokogiri(entry.summary)/"img").at_css("img")['src'],
-          :preview =>  truncate(ActionView::Base.full_sanitizer.sanitize(entry.summary.strip), :length => 500, :separator => ' '),
+          :preview => HTMLEntities.new.decode(truncate(ActionView::Base.full_sanitizer.strip_tags(entry.summary.strip), :length => 500, :separator => ' ')),
           :article_url => entry.entry_id,
-          :body => ActionView::Base.full_sanitizer.sanitize(entry.content.strip)
+          :body => HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content.strip))
         )
       end
     end
