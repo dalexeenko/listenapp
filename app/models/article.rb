@@ -74,7 +74,7 @@ class Article < ActiveRecord::Base
           :source_id => 13,
           :author => entry.author,
           :title => entry.title.strip,
-          :image_url => (Nokogiri(entry.summary)/"img").map{ |i| i['src'] },
+          :image_url => (Nokogiri(entry.summary)/"img").at_css("img")['src'],
           :preview =>  truncate(ActionView::Base.full_sanitizer.sanitize(entry.summary.strip), :length => 500, :separator => ' '),
           :article_url => entry.entry_id,
           :body => ActionView::Base.full_sanitizer.sanitize(entry.content.strip)
@@ -86,7 +86,8 @@ class Article < ActiveRecord::Base
   def self.populate_articles
     articles = Article.find :all,
                             :limit => 3,
-                            :order => 'created_at desc'
+                            :order => 'created_at desc',
+                            :conditions => "preview_chunks IS NULL"
 
     articles.each do |article|
       title = article.title
@@ -129,10 +130,6 @@ class Article < ActiveRecord::Base
     bucket = amazon.buckets.find('talkieapp')
     url = 'http://192.20.225.36' + redirectLocation
 
-    #open('temp.wav', 'wb') do |file|
-    #  file << open(url).read
-    #end
-
     wavfile = Tempfile.new(".wav")
     wavfile.binmode
 
@@ -148,8 +145,6 @@ class Article < ActiveRecord::Base
     file.content = (File.read mp3)
 
     if file.save
-      # Make a new ActiveRecord::Base class for this
-      #LogFile.create(size: download.size, type: download.type, name: url)
       print file.url
     end
 
@@ -163,13 +158,6 @@ class Article < ActiveRecord::Base
     system("bin/lame", *cmd_args)
 
     dst.binmode
-    #io = StringIO.new(dst.read)
-    #dst.close
-
-    #io.original_filename = "sound.mp3"
-    #io.content_type = "audio/mpeg"
-
-    #io
     dst.path
   end
 end
