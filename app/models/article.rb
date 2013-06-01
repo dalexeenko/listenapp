@@ -29,7 +29,7 @@ class Article < ActiveRecord::Base
   MAX_CHUNK_SIZE = 300
 
   def self.split_into_sub_sentences string
-    sub_sentences = split_into_tokens string, '[\.\,:;]'
+    sub_sentences = split_into_tokens string, '[\.\,:; ]'
     
     sub_sentences.inject([]){|b,j|
       if !b.last || (b.last.length + j.length > MAX_CHUNK_SIZE) then
