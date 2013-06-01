@@ -71,11 +71,11 @@ class Article < ActiveRecord::Base
         create!(
           :source_id => 13,
           :author => entry.author,
-          :title => entry.title,
+          :title => entry.title.strip,
           :image_url => (Nokogiri(entry.summary)/"img").map{ |i| i['src'] },
-          :preview => ActionView::Base.full_sanitizer.sanitize(entry.summary),
+          :preview =>  truncate(ActionView::Base.full_sanitizer.sanitize(entry.summary.strip), :length => 500, :separator => ' '),
           :article_url => entry.entry_id,
-          :body => ActionView::Base.full_sanitizer.sanitize(entry.content)
+          :body => ActionView::Base.full_sanitizer.sanitize(entry.content.strip)
         )
       end
     end
