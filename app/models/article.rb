@@ -20,7 +20,6 @@ require "uri"
 require 'open-uri'
 require 's3'
 require 'htmlentities'
-require 'treat'
 
 include ActionView::Helpers::TextHelper
 
@@ -31,7 +30,20 @@ class Article < ActiveRecord::Base
   MAX_CHUNK_SIZE = 300
 
   def self.run
-    Treat::Core::Installer.install 'english'
+    StanfordCoreNLP.use :english
+    
+    StanfordCoreNLP.jar_path = 'bin/stanford-core-nlp/'
+    StanfordCoreNLP.model_path = 'bin/stanford-core-nlp/'
+
+    text = "Lorem ipsum, consectetur elit. Donec ut ligula. Sed acumsan posuere tristique. Sed et tristique sem. Aenean sollicitudin, sapien sodales elementum blandit. Fusce urna libero blandit eu aliquet ac rutrum vel tortor."
+
+    pipeline = StanfordCoreNLP.load(:tokenize, :ssplit, :pos, :lemma, :parse, :ner, :dcoref)
+    text = StanfordCoreNLP::Annotation.new(text)
+    pipeline.annotate(text)
+
+    text.get(:sentences).each do |sentence|
+      print sentence
+    end
   end
 
   def self.split_into_sub_sentences string
