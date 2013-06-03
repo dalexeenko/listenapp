@@ -20,6 +20,7 @@ require "uri"
 require 'open-uri'
 require 's3'
 require 'htmlentities'
+require 'treat'
 
 include ActionView::Helpers::TextHelper
 
@@ -28,6 +29,10 @@ class Article < ActiveRecord::Base
   has_many :chunks
 
   MAX_CHUNK_SIZE = 300
+
+  def self.run
+    Treat::Core::Installer.install 'english'
+  end
 
   def self.split_into_sub_sentences string
     sub_sentences = split_into_tokens string, '[\.\,:; ]'
