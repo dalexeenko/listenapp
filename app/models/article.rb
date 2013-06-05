@@ -31,8 +31,8 @@ class Article < ActiveRecord::Base
   MAX_CHUNK_SIZE = 300
 
   def self.run text
-    StanfordCoreNLP.jar_path = 'bin/stanford-core-nlp/'
-    StanfordCoreNLP.model_path = 'bin/stanford-core-nlp/'
+    StanfordCoreNLP.jar_path = './bin/stanford-core-nlp/'
+    StanfordCoreNLP.model_path = './bin/stanford-core-nlp/'
 
     sentences = Array.new
 
