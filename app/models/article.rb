@@ -20,6 +20,7 @@ require "uri"
 require 'open-uri'
 require 's3'
 require 'htmlentities'
+require 'stanford-core-nlp'
 
 include ActionView::Helpers::TextHelper
 
@@ -29,21 +30,19 @@ class Article < ActiveRecord::Base
 
   MAX_CHUNK_SIZE = 300
 
-  def self.run
-    StanfordCoreNLP.use :english
-    
+  def self.run text
     StanfordCoreNLP.jar_path = 'bin/stanford-core-nlp/'
     StanfordCoreNLP.model_path = 'bin/stanford-core-nlp/'
 
-    text = "Lorem ipsum, consectetur elit. Donec ut ligula. Sed acumsan posuere tristique. Sed et tristique sem. Aenean sollicitudin, sapien sodales elementum blandit. Fusce urna libero blandit eu aliquet ac rutrum vel tortor."
+    sentences = Array.new
 
-    pipeline = StanfordCoreNLP.load(:tokenize, :ssplit, :pos, :lemma, :parse, :ner, :dcoref)
+    pipeline = StanfordCoreNLP.load(:tokenize, :ssplit)
     text = StanfordCoreNLP::Annotation.new(text)
     pipeline.annotate(text)
-
     text.get(:sentences).each do |sentence|
-      print sentence
+      sentences << sentence
     end
+    sentences
   end
 
   def self.split_into_sub_sentences string
@@ -60,7 +59,8 @@ class Article < ActiveRecord::Base
   end
 
   def self.split_into_chunks body
-    sentences = split_into_tokens body, '[\.\?!]'
+    # sentences = split_into_tokens body, '[\.\?!]'
+    sentences = run body
 
     sentences.inject([]){|a,i|
       if !a.last || (a.last.length + i.length > MAX_CHUNK_SIZE) then
