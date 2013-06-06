@@ -81,7 +81,7 @@ class Article < ActiveRecord::Base
 
   def self.populate_articles
     articles = Article.find :all,
-                            :limit => 3,
+                            :limit => 15,
                             :order => 'created_at desc',
                             :conditions => "preview_chunks IS NULL"
 
