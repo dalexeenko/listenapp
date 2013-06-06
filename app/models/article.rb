@@ -26,10 +26,12 @@ require 'addressable/uri'
 include ActionView::Helpers::TextHelper
 
 class Article < ActiveRecord::Base
-  attr_accessible :article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title
+  attr_accessible :article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title, :published_at
   has_many :chunks
 
   MAX_CHUNK_SIZE = 300
+
+  SUMMARY_SIZE = 500
 
   def self.split_into_sentences text
     StanfordCoreNLP.jar_path = '/app/bin/stanford-core-nlp/'
@@ -55,6 +57,19 @@ class Article < ActiveRecord::Base
     }
   end
 
+  def self.generate_summary content
+    sentences = split_into_sentences content
+
+    sentences.reduce([]){|a,i|
+      if !a.last || (a.last.length + i.length > SUMMARY_SIZE) then
+          a << i
+      else
+        a.last << " #{i}"
+      end
+      a
+    }
+  end
+
   def self.update_from_feed(feed_url)
     feed = Feedzirra::Feed.fetch_and_parse(feed_url)
     feed.entries.each do |entry|
@@ -66,15 +81,20 @@ class Article < ActiveRecord::Base
         params['h'] = (params['h'].to_i * 2).to_s
         image_url.query_values = params
 
+        content = HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content.strip))
+        sentences = generate_summary content
+        summary = sentences[0]
+        content.slice! summary
+
         create!(
           :source_id => 13,
           :author => entry.author,
           :title => entry.title.strip,
           :image_url => image_url.to_s,
-          :preview => HTMLEntities.new.decode(truncate(ActionView::Base.full_sanitizer.strip_tags(entry.summary.strip), :length => 500, :separator => ' ')),
+          :preview => summary,
           :published_at => entry.published,
           :article_url => entry.entry_id,
-          :body => HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content.strip))
+          :body => content
         )
       end
     end
