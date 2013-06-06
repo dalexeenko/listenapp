@@ -21,6 +21,7 @@ require 'open-uri'
 require 's3'
 require 'htmlentities'
 require 'stanford-core-nlp'
+require 'addressable/uri'
 
 include ActionView::Helpers::TextHelper
 
@@ -30,49 +31,23 @@ class Article < ActiveRecord::Base
 
   MAX_CHUNK_SIZE = 300
 
-  def self.run text
-    StanfordCoreNLP.jar_path = './bin/stanford-core-nlp/'
-    StanfordCoreNLP.model_path = './bin/stanford-core-nlp/'
-
-    sentences = Array.new
+  def self.split_into_sentences text
+    #StanfordCoreNLP.jar_path = '/app/bin/stanford-core-nlp/'
+    #StanfordCoreNLP.model_path = '/app/bin/stanford-core-nlp/'
 
     pipeline = StanfordCoreNLP.load(:tokenize, :ssplit)
     text = StanfordCoreNLP::Annotation.new(text)
     pipeline.annotate(text)
-    text.get(:sentences).each do |sentence|
-      sentences << sentence
-    end
-    sentences
+    text.get(:sentences).to_a.map &:to_s
   end
 
-  def self.split_into_sub_sentences string
-    sub_sentences = split_into_tokens string, '[\.\,:; ]'
-    
-    sub_sentences.inject([]){|b,j|
-      if !b.last || (b.last.length + j.length > MAX_CHUNK_SIZE) then
-        b << j
-      else
-        b.last << " #{j}"
-      end
-      b
-    }
-  end
+  def self.split_into_chunks text
+    sentences = split_into_sentences text
+    sentences = sentences.map {|sentence| sentence.length > MAX_CHUNK_SIZE ? word_wrap(sentence, :line_width => MAX_CHUNK_SIZE).split("\n") : sentence }.flatten
 
-  def self.split_into_chunks body
-    # sentences = split_into_tokens body, '[\.\?!]'
-    sentences = run body
-
-    sentences.inject([]){|a,i|
+    sentences.reduce([]){|a,i|
       if !a.last || (a.last.length + i.length > MAX_CHUNK_SIZE) then
-        if i.length < MAX_CHUNK_SIZE
           a << i
-        else
-          sub_sentences = split_into_sub_sentences i
-
-          sub_sentences.each do |part|
-            a << part
-          end
-        end
       else
         a.last << " #{i}"
       end
@@ -80,19 +55,22 @@ class Article < ActiveRecord::Base
     }
   end
 
-  def self.split_into_tokens(string, separator)
-    string.scan(/(.+?#{separator}) ?/).map(&:first)
-  end
-
   def self.update_from_feed(feed_url)
     feed = Feedzirra::Feed.fetch_and_parse(feed_url)
     feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
+        image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
+        params = image_url.query_values
+        params.delete('crop')
+        params['w'] = (params['w'].to_i * 2).to_s
+        params['h'] = (params['h'].to_i * 2).to_s
+        image_url.query_values = params
+
         create!(
           :source_id => 13,
           :author => entry.author,
           :title => entry.title.strip,
-          :image_url => (Nokogiri(entry.summary)/"img").at_css("img")['src'],
+          :image_url => image_url.to_s,
           :preview => HTMLEntities.new.decode(truncate(ActionView::Base.full_sanitizer.strip_tags(entry.summary.strip), :length => 500, :separator => ' ')),
           :article_url => entry.entry_id,
           :body => HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content.strip))

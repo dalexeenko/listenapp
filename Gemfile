@@ -12,6 +12,7 @@ gem "s3", "~> 0.3.11"
 gem "proxies", "~> 0.2.1"
 gem "htmlentities", "~> 4.3.1"
 gem "stanford-core-nlp", "~> 0.5.1"
+gem "addressable", "~> 2.3.4"
 
 group :development, :test do
   gem 'sqlite3', '1.3.5'
