@@ -72,6 +72,7 @@ class Article < ActiveRecord::Base
           :title => entry.title.strip,
           :image_url => image_url.to_s,
           :preview => HTMLEntities.new.decode(truncate(ActionView::Base.full_sanitizer.strip_tags(entry.summary.strip), :length => 500, :separator => ' ')),
+          :published_at => entry.published,
           :article_url => entry.entry_id,
           :body => HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content.strip))
         )

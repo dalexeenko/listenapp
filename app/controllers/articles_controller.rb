@@ -10,9 +10,9 @@ class ArticlesController < ApplicationController
     params[:max_id] ||= Article.last
 
     @articles = Article.find :all,
-                             :conditions => ['id >= ? AND id <= ?', params[:since_id], params[:max_id]],
+                             :conditions => ['id >= ? AND id <= ? AND preview_chunks IS NOT NULL', params[:since_id], params[:max_id]],
                              :limit => params[:count],
-                             :order => 'created_at desc'
+                             :order => 'published_at desc'
 
     respond_to do |format|
      format.html # index.html.erb
