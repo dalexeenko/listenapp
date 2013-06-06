@@ -86,6 +86,9 @@ class Article < ActiveRecord::Base
         summary = sentences[0]
         content.slice! summary
 
+        puts "summary = " + summary + "\n"
+        puts "content = " + content + "\n"
+
         create!(
           :source_id => 13,
           :author => entry.author,
