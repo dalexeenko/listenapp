@@ -81,10 +81,11 @@ class Article < ActiveRecord::Base
         params['h'] = (params['h'].to_i * 2).to_s
         image_url.query_values = params
 
-        content = HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content.strip))
+        content = HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content).squish)
         sentences = generate_summary content
         summary = sentences[0]
         content.slice! summary
+        content.strip!
 
         puts "summary = " + summary + "\n"
         puts "content = " + content + "\n"
