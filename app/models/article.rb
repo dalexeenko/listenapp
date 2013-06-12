@@ -34,8 +34,8 @@ class Article < ActiveRecord::Base
   SUMMARY_SIZE = 500
 
   def self.split_into_sentences text
-    StanfordCoreNLP.jar_path = '/app/bin/stanford-core-nlp/'
-    StanfordCoreNLP.model_path = '/app/bin/stanford-core-nlp/'
+    #StanfordCoreNLP.jar_path = '/app/bin/stanford-core-nlp/'
+    #StanfordCoreNLP.model_path = '/app/bin/stanford-core-nlp/'
 
     pipeline = StanfordCoreNLP.load(:tokenize, :ssplit)
     text = StanfordCoreNLP::Annotation.new(text)
@@ -73,7 +73,7 @@ class Article < ActiveRecord::Base
   def self.update_from_feed(feed_url)
     feed = Feedzirra::Feed.fetch_and_parse(feed_url)
 
-    feed.entries.sort_by! { |e| e.published }.reverse!
+    feed.entries.sort_by! { |e| e.published }
 
     feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
