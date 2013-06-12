@@ -11,7 +11,7 @@ class ArticlesController < ApplicationController
 
     @articles = Article.find :all,
                              :conditions => ['id >= ? AND id <= ? AND preview_chunks IS NOT NULL', params[:since_id], params[:max_id]],
-                             :limit => params[:count]
+                             :limit => params[:count],
                              :order => 'id desc'
                              # :order => 'published_at desc'
 
