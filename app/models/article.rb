@@ -149,6 +149,8 @@ class Article < ActiveRecord::Base
     response = http.request(request)
     redirectLocation = response['location']
 
+    raise "redirect location is nil!" if redirectLocation.nil?
+
     amazon = S3::Service.new(access_key_id: 'AKIAJMGKXIP5RHBHSMMA', secret_access_key: '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')
     bucket = amazon.buckets.find('talkieapp')
     url = 'http://192.20.225.36' + redirectLocation
