@@ -113,30 +113,34 @@ class Article < ActiveRecord::Base
                             :conditions => "preview_chunks IS NULL"
 
     articles.each do |article|
-      title = article.title
-      title_url = self.generate_audio(title)
+      begin
+        title = article.title
+        title_url = self.generate_audio(title)
 
-      Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
+        Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
 
-      preview = split_into_chunks article.preview
+        preview = split_into_chunks article.preview
 
-      number_of_preview_chunks = 0
+        number_of_preview_chunks = 0
 
-      preview.each do |preview_chunk|
-        url = self.generate_audio(preview_chunk)
-        Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
-        number_of_preview_chunks += 1
+        preview.each do |preview_chunk|
+          url = self.generate_audio(preview_chunk)
+          Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
+          number_of_preview_chunks += 1
+        end
+
+        body = split_into_chunks article.body
+
+        body.each do |body_chunk|
+          url = self.generate_audio(body_chunk)
+          Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
+        end
+
+        article.preview_chunks = number_of_preview_chunks
+        article.save
+      rescue ArgumentError
+        puts "Exception!"
       end
-
-      body = split_into_chunks article.body
-
-      body.each do |body_chunk|
-        url = self.generate_audio(body_chunk)
-        Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
-      end
-
-      article.preview_chunks = number_of_preview_chunks
-      article.save
     end
   end
 
@@ -149,7 +153,13 @@ class Article < ActiveRecord::Base
     response = http.request(request)
     redirectLocation = response['location']
 
-    raise "redirect location is nil! request: " + request.to_s + "; text: " + text if redirectLocation.nil?
+    # $ curl -v -H "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q-H "Content-Type:application/x-www-form-urlencoded"
+    # -X POST -d 'voice=crystal&txt=Access+Notifications+On+The+Lock+Screen+A+minor+but+ongoing+frustration+with+iOS’s+earlier+
+    # implementation+of+the+Notification+Center+is+that+it+required+you+to+unlock+your+device.&speakButton=SPEAK' http://192.20.225.36/tts/cgi-bin/nph-nvdemo
+    #This interactive text-to-speech site is provided by AT&T solely
+    # for demonstration purposes.  Any distribution, professional, or commercial use is
+    # strictly disallowed. 
+    raise ArgumentError, "redirect location is nil! request: " + request.to_s + "; text: " + text if redirectLocation.nil?
 
     amazon = S3::Service.new(access_key_id: 'AKIAJMGKXIP5RHBHSMMA', secret_access_key: '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')
     bucket = amazon.buckets.find('talkieapp')
