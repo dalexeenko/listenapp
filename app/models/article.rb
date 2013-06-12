@@ -109,8 +109,7 @@ class Article < ActiveRecord::Base
 
   def self.populate_articles
     articles = Article.find :all,
-                            :limit => 15,
-                            :order => 'created_at desc',
+                            :order => 'id desc',
                             :conditions => "preview_chunks IS NULL"
 
     articles.each do |article|
