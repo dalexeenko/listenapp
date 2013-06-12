@@ -34,8 +34,8 @@ class Article < ActiveRecord::Base
   SUMMARY_SIZE = 500
 
   def self.split_into_sentences text
-    #StanfordCoreNLP.jar_path = '/app/bin/stanford-core-nlp/'
-    #StanfordCoreNLP.model_path = '/app/bin/stanford-core-nlp/'
+    StanfordCoreNLP.jar_path = '/app/bin/stanford-core-nlp/'
+    StanfordCoreNLP.model_path = '/app/bin/stanford-core-nlp/'
 
     pipeline = StanfordCoreNLP.load(:tokenize, :ssplit)
     text = StanfordCoreNLP::Annotation.new(text)
