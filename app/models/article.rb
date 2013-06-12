@@ -28,6 +28,7 @@ include ActionView::Helpers::TextHelper
 class Article < ActiveRecord::Base
   attr_accessible :article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title, :published_at
   has_many :chunks
+  default_scope order(:id)
 
   MAX_CHUNK_SIZE = 300
 
@@ -140,6 +141,8 @@ class Article < ActiveRecord::Base
         article.save
       rescue ArgumentError
         puts "Exception!"
+        article.preview_chunks = -1
+        article.save
       end
     end
   end
