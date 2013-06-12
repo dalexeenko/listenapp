@@ -72,6 +72,9 @@ class Article < ActiveRecord::Base
 
   def self.update_from_feed(feed_url)
     feed = Feedzirra::Feed.fetch_and_parse(feed_url)
+
+    feed.entries.sort_by { |e| e.published }.reverse!
+
     feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
         image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
@@ -86,9 +89,6 @@ class Article < ActiveRecord::Base
         summary = sentences[0]
         content.slice! summary
         content.strip!
-
-        puts "summary = " + summary + "\n"
-        puts "content = " + content + "\n"
 
         create!(
           :source_id => 13,
