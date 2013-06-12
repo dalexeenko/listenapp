@@ -73,7 +73,7 @@ class Article < ActiveRecord::Base
   def self.update_from_feed(feed_url)
     feed = Feedzirra::Feed.fetch_and_parse(feed_url)
 
-    feed.entries.sort_by { |e| e.published }.reverse!
+    feed.entries.sort_by! { |e| e.published }.reverse!
 
     feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
@@ -89,6 +89,9 @@ class Article < ActiveRecord::Base
         summary = sentences[0]
         content.slice! summary
         content.strip!
+
+        puts "Title: " + entry.title.strip + "\n"
+        puts "Summary: " + summary + "\n"
 
         create!(
           :source_id => 13,
