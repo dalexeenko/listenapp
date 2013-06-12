@@ -6,8 +6,8 @@ class ArticlesController < ApplicationController
   # GET /articles.json
   def index
     params[:count] ||= 3
-    params[:since_id]  ||= Article.first
-    params[:max_id] ||= Article.last
+    params[:since_id]  ||= Article.order(:id).first
+    params[:max_id] ||= Article.order(:id).last
 
     @articles = Article.find :all,
                              :conditions => ['id >= ? AND id <= ? AND preview_chunks IS NOT NULL', params[:since_id], params[:max_id]],
