@@ -77,24 +77,38 @@ class Article < ActiveRecord::Base
 
     feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
-        image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
-        params = image_url.query_values
-        params.delete('crop')
-        params['w'] = (params['w'].to_i * 2).to_s
-        params['h'] = (params['h'].to_i * 2).to_s
-        image_url.query_values = params
 
-        content = HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(entry.content).squish)
+        if !(Nokogiri(entry.summary)/"img").at_css("img").nil? then
+          image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
+          params = image_url.query_values
+          params.delete('crop')
+          params['w'] = (params['w'].to_i * 2).to_s
+          params['h'] = (params['h'].to_i * 2).to_s
+          image_url.query_values = params
+        end
+
+        if entry.content.nil? then
+          c = entry.summary
+        else
+          c = entry.content
+        end
+
+        content = HTMLEntities.new.decode(ActionView::Base.full_sanitizer.strip_tags(c).squish)
         sentences = generate_summary content
         summary = sentences[0]
+
+        next if content.nil? || content.length == 0
+
         content.slice! summary
         content.strip!
 
         puts "Title: " + entry.title.strip + "\n"
         puts "Summary: " + summary + "\n"
 
+        source = Source.all :conditions => { :rss_url => feed_url }
+
         create!(
-          :source_id => 13,
+          :source_id => source.first.id,
           :author => entry.author,
           :title => entry.title.strip,
           :image_url => image_url.to_s,
@@ -112,10 +126,18 @@ class Article < ActiveRecord::Base
                             :order => 'id desc',
                             :conditions => "preview_chunks IS NULL"
 
+    voice = 'mike'
+
     articles.each do |article|
       begin
+        if voice == 'mike' then
+          voice = 'claire'
+        else
+          voice = 'mike'
+        end
+
         title = article.title
-        title_url = self.generate_audio(title)
+        title_url = self.generate_audio(title, voice)
 
         Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
 
@@ -124,7 +146,7 @@ class Article < ActiveRecord::Base
         number_of_preview_chunks = 0
 
         preview.each do |preview_chunk|
-          url = self.generate_audio(preview_chunk)
+          url = self.generate_audio(preview_chunk, voice)
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
           number_of_preview_chunks += 1
         end
@@ -132,7 +154,7 @@ class Article < ActiveRecord::Base
         body = split_into_chunks article.body
 
         body.each do |body_chunk|
-          url = self.generate_audio(body_chunk)
+          url = self.generate_audio(body_chunk, voice)
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
         end
 
@@ -146,12 +168,12 @@ class Article < ActiveRecord::Base
     end
   end
 
-  def self.generate_audio(text)
+  def self.generate_audio(text, voice)
     uri = URI.parse("http://192.20.225.36/tts/cgi-bin/nph-nvdemo")
 
     http = Net::HTTP.new(uri.host, uri.port)
     request = Net::HTTP::Post.new(uri.request_uri)
-    request.set_form_data({"voice" => "crystal", "txt" => text})
+    request.set_form_data({"voice" => voice, "txt" => text})
     response = http.request(request)
     redirectLocation = response['location']
 
