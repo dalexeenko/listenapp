@@ -7,4 +7,18 @@ task :update_feed => :environment do
 		Article.populate_articles
 		puts "Done."
 	end
+
+	http = Net::HTTP.new('talkieapp.herokuapp.com')
+	http = http.start
+	url = 'https://talkieapp.herokuapp.com/articles.json'
+	req = Net::HTTP::Get.new(URI.encode(url))
+	req.basic_auth 'dmitry@talkie.com', 'foobar'
+	res = http.request(req)
+
+	http = Net::HTTP.new('talkieapp-staging.herokuapp.com')
+	http = http.start
+	url = 'https://talkieapp-staging.herokuapp.com/articles.json'
+	req = Net::HTTP::Get.new(URI.encode(url))
+	req.basic_auth 'dmitry@talkie.com', 'foobar'
+	res = http.request(req)
 end

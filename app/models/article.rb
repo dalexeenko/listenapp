@@ -31,7 +31,7 @@ class Article < ActiveRecord::Base
 
   MAX_CHUNK_SIZE = 300
 
-  SUMMARY_SIZE = 500
+  SUMMARY_SIZE = 800
 
   def self.split_into_sentences text
     StanfordCoreNLP.jar_path = '/app/bin/stanford-core-nlp/'
