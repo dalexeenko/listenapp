@@ -8,6 +8,8 @@ task :update_feed => :environment do
 		puts "Done."
 	#end
 
+    require "net/http"
+    
 	http = Net::HTTP.new('talkieapp.herokuapp.com')
 	http = http.start
 	url = 'https://talkieapp.herokuapp.com/articles.json'
@@ -26,6 +28,5 @@ task :update_feed => :environment do
 	http = http.start
 	url = 'https://talkieapp-signup.herokuapp.com/users.json'
 	req = Net::HTTP::Get.new(URI.encode(url))
-	req.basic_auth 'dmitry@talkie.com', 'foobar'
 	res = http.request(req)
 end
