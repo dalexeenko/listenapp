@@ -78,6 +78,8 @@ class Article < ActiveRecord::Base
     feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
 
+        source = Source.all :conditions => { :rss_url => feed_url }
+
         if !(Nokogiri(entry.summary)/"img").at_css("img").nil? then
           image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
           params = image_url.query_values
@@ -85,6 +87,12 @@ class Article < ActiveRecord::Base
           params['w'] = (params['w'].to_i * 2).to_s
           params['h'] = (params['h'].to_i * 2).to_s
           image_url.query_values = params
+        else
+          if source.first.name.include? "TechCrunch" then
+            image_url = "https://talkieapp.s3.amazonaws.com/techcrunch-logo.jpg"
+          else
+            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+          end
         end
 
         if entry.content.nil? then
@@ -105,8 +113,6 @@ class Article < ActiveRecord::Base
         puts "Title: " + entry.title.strip + "\n"
         puts "Summary: " + summary + "\n"
 
-        source = Source.all :conditions => { :rss_url => feed_url }
-
         create!(
           :source_id => source.first.id,
           :author => entry.author,
@@ -126,18 +132,21 @@ class Article < ActiveRecord::Base
                             :order => 'id desc',
                             :conditions => "preview_chunks IS NULL"
 
-    voice = 'mike'
-
     articles.each do |article|
       begin
-        if voice == 'mike' then
+
+        r = rand(5)
+
+        if r == 0 then
+          voice = 'crystal'
+        elsif r == 1 then
+          voice = 'mike'
+        elsif r == 2 then
+          voice = 'rich'
+        elsif r == 3 then
+          voice = 'lauren'
+        elsif r == 4 then
           voice = 'claire'
-        #else if voice == 'claire' then
-        #  voice = 'rich'
-        #else if voice == 'rich' then
-        #  voice = 'lauren'
-        #else if voice == 'lauren' then
-        #  voice = 'mike'
         end
 
         title = article.title
