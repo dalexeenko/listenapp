@@ -132,12 +132,12 @@ class Article < ActiveRecord::Base
       begin
         if voice == 'mike' then
           voice = 'claire'
-        else if voice == 'claire' then
-          voice = 'rich'
-        else if voice == 'rich' then
-          voice = 'lauren'
-        else if voice == 'lauren' then
-          voice = 'mike'
+        #else if voice == 'claire' then
+        #  voice = 'rich'
+        #else if voice == 'rich' then
+        #  voice = 'lauren'
+        #else if voice == 'lauren' then
+        #  voice = 'mike'
         end
 
         title = article.title
