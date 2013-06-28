@@ -31,4 +31,5 @@ task :update_feed => :environment do
 	res = http.request(req)
 
 	Article.destroy_all(['updated_at < ?', 14.days.ago])
+	Chunk.destroy_all(['updated_at < ?', 14.days.ago])
 end
