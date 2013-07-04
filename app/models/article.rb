@@ -91,7 +91,9 @@ class Article < ActiveRecord::Base
         else
           if source.first.name.include? "TechCrunch" then
             image_url = "https://talkieapp.s3.amazonaws.com/techcrunch-logo.jpg"
-          else
+          elsif source.first.name.include? "CNN" then
+            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+          elsif source.first.name.include? "Ars Technica" then
             image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
           end
         end

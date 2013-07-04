@@ -4,6 +4,7 @@ task :update_feed => :environment do
 		puts "Fetching articles..."
 		Article.update_from_feed('http://feeds.feedburner.com/TechCrunch/')
 		#Article.update_from_feed('http://rss.cnn.com/rss/cnn_topstories.rss')
+		#Article.update_from_feed('http://feeds.arstechnica.com/arstechnica/index')
 		Article.populate_articles
 		puts "Done."
 	#end
