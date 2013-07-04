@@ -16,6 +16,7 @@
 #
 
 require "net/http"
+require "net/https"
 require "uri"
 require 'open-uri'
 require 's3'
@@ -130,7 +131,8 @@ class Article < ActiveRecord::Base
   def self.populate_articles
     articles = Article.find :all,
                             :order => 'id desc',
-                            :conditions => "preview_chunks IS NULL"
+                            :conditions => "preview_chunks IS NULL",
+                            :limit => 5
 
     articles.each do |article|
       begin
@@ -224,21 +226,6 @@ class Article < ActiveRecord::Base
   end
 
   def self.generate_audio_nuance(text, voice)
-
-    #require 'net/https'
-
-    #uri = URI.parse("https://tts.nuancemobility.net:443/NMDPTTSCmdServlet/tts")
-
-    #http = Net::HTTP.new(uri.host, uri.port)
-    #http.use_ssl = url.port == 443
-    #request = Net::HTTP::Post.new(URI.encode(uri.request_uri))
-    #request.set_form_data({"codec" => "wav", "ttsLang" => "en_US", "text" => text, "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038", "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093", "id" => "0000"})
-    #response = http.request(request)
-    #redirectLocation = response['location']
-
-    require "net/https"
-    require "uri"
-
     uri = URI.parse("https://tts.nuancemobility.net:443/NMDPTTSCmdServlet/tts")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
@@ -246,7 +233,7 @@ class Article < ActiveRecord::Base
 
     request = Net::HTTP::Get.new(uri.request_uri)
 
-    request.set_form_data({"codec" => "wav", "ttsLang" => "en_US", "text" => text, "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038", "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093", "id" => "0000"})
+    request.set_form_data({"codec" => "mp3", "ttsLang" => "en_US", "text" => text, "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038", "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093", "id" => "0000"})
 
     request = Net::HTTP::Get.new(uri.request_uri + '?' + request.body)
 
@@ -254,16 +241,6 @@ class Article < ActiveRecord::Base
 
     amazon = S3::Service.new(access_key_id: 'AKIAJMGKXIP5RHBHSMMA', secret_access_key: '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')
     bucket = amazon.buckets.find('talkieapp')
-    #url = 'http://192.20.225.36' + redirectLocation
-
-    #wavfile = Tempfile.new(".wav")
-    #wavfile.binmode
-
-    #open(url) do |f|
-    #  wavfile << f.read
-    #end
-
-    #wavfile.close
 
     open("tempfile_nuance.wav", "wb") do |file|
         file.write(response.body)
