@@ -233,11 +233,13 @@ class Article < ActiveRecord::Base
 
     request = Net::HTTP::Get.new(uri.request_uri)
 
-    request.set_form_data({"codec" => "mp3", "ttsLang" => "en_US", "text" => text, "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038", "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093", "id" => "0000"})
+    request.set_form_data({"codec" => "wav", "ttsLang" => "en_US", "text" => text, "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038", "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093", "id" => "0000"})
 
     request = Net::HTTP::Get.new(uri.request_uri + '?' + request.body)
 
     response = http.request(request)
+
+    raise ArgumentError, "Exceeded maximum number of transactions per day." if response.code == "503"
 
     amazon = S3::Service.new(access_key_id: 'AKIAJMGKXIP5RHBHSMMA', secret_access_key: '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')
     bucket = amazon.buckets.find('talkieapp')
