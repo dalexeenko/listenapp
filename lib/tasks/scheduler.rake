@@ -4,7 +4,11 @@ task :update_feed => :environment do
 		puts "Fetching articles..."
 		Article.update_from_feed('http://feeds.feedburner.com/TechCrunch/')
 		Article.update_from_feed('http://rss.cnn.com/rss/cnn_topstories.rss')
-		#Article.update_from_feed('http://feeds.arstechnica.com/arstechnica/index')
+		Article.update_from_feed('http://feeds.arstechnica.com/arstechnica/index')
+		Article.update_from_feed('http://www.theverge.com/rss/index.xml')
+		Article.update_from_feed('http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
+		Article.update_from_feed('http://feeds.washingtonpost.com/rss/politics')
+		Article.update_from_feed('http://feeds.guardian.co.uk/theguardian/us-home/rss')
 		Article.populate_articles
 		puts "Done."
 	#end
