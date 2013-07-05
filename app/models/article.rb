@@ -154,7 +154,7 @@ class Article < ActiveRecord::Base
         end
 
         title = article.title
-        title_url = self.generate_audio(title, voice)
+        title_url = self.generate_audio_nuance(title, voice)
 
         Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
 
@@ -163,7 +163,7 @@ class Article < ActiveRecord::Base
         number_of_preview_chunks = 0
 
         preview.each do |preview_chunk|
-          url = self.generate_audio(preview_chunk, voice)
+          url = self.generate_audio_nuance(preview_chunk, voice)
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
           number_of_preview_chunks += 1
         end
@@ -171,7 +171,7 @@ class Article < ActiveRecord::Base
         body = split_into_chunks article.body
 
         body.each do |body_chunk|
-          url = self.generate_audio(body_chunk, voice)
+          url = self.generate_audio_nuance(body_chunk, voice)
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
         end
 
