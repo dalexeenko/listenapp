@@ -126,8 +126,8 @@ class Article < ActiveRecord::Base
 
         create!(
           :source_id => source.first.id,
-          :author => entry.author.truncate(250, separator: ' '),
-          :title => entry.title.strip.truncate(250, separator: ' '),
+          :author => entry.author.to_s.truncate(250, separator: ' '),
+          :title => entry.title.strip.to_s.truncate(250, separator: ' '),
           :image_url => image_url.to_s,
           :preview => summary,
           :published_at => entry.published,

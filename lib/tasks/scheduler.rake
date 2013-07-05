@@ -35,6 +35,6 @@ task :update_feed => :environment do
 	req = Net::HTTP::Get.new(URI.encode(url))
 	res = http.request(req)
 
-	Article.destroy_all(['updated_at < ?', 14.days.ago])
-	Chunk.destroy_all(['updated_at < ?', 14.days.ago])
+	Article.destroy_all(['updated_at < ?', 7.days.ago])
+	Chunk.destroy_all(['updated_at < ?', 7.days.ago])
 end
