@@ -134,7 +134,7 @@ class Article < ActiveRecord::Base
     articles = Article.find :all,
                             :order => 'id desc',
                             :conditions => "preview_chunks IS NULL",
-                            :limit => 5
+                            :limit => 10
 
     articles.each do |article|
       begin
