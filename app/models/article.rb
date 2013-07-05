@@ -95,6 +95,8 @@ class Article < ActiveRecord::Base
             image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
           elsif source.first.name.include? "Ars Technica" then
             image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+          elsif source.first.name.include? "The Verge" then
+            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
           end
         end
 
@@ -133,8 +135,7 @@ class Article < ActiveRecord::Base
   def self.populate_articles
     articles = Article.find :all,
                             :order => 'id desc',
-                            :conditions => "preview_chunks IS NULL",
-                            :limit => 10
+                            :conditions => "preview_chunks IS NULL"
 
     articles.each do |article|
       begin
@@ -154,7 +155,7 @@ class Article < ActiveRecord::Base
         end
 
         title = article.title
-        title_url = self.generate_audio_nuance(title, voice)
+        title_url = self.generate_audio(title, voice)
 
         Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
 
@@ -163,7 +164,7 @@ class Article < ActiveRecord::Base
         number_of_preview_chunks = 0
 
         preview.each do |preview_chunk|
-          url = self.generate_audio_nuance(preview_chunk, voice)
+          url = self.generate_audio(preview_chunk, voice)
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
           number_of_preview_chunks += 1
         end
@@ -171,7 +172,7 @@ class Article < ActiveRecord::Base
         body = split_into_chunks article.body
 
         body.each do |body_chunk|
-          url = self.generate_audio_nuance(body_chunk, voice)
+          url = self.generate_audio(body_chunk, voice)
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
         end
 
