@@ -148,16 +148,30 @@ class Article < ActiveRecord::Base
 
         r = rand(5)
 
-        if r == 0 then
-          voice = 'crystal'
-        elsif r == 1 then
-          voice = 'mike'
-        elsif r == 2 then
-          voice = 'rich'
-        elsif r == 3 then
-          voice = 'lauren'
-        elsif r == 4 then
-          voice = 'claire'
+        if article.source_id == 13 then
+          if r == 0 then
+            voice = 'Allison'
+          elsif r == 1 then
+            voice = 'Carol'
+          elsif r == 2 then
+            voice = 'Samantha'
+          elsif r == 3 then
+            voice = 'Tom'
+          elsif r == 4 then
+            voice = 'Carol'
+          end
+        else          
+          if r == 0 then
+            voice = 'crystal'
+          elsif r == 1 then
+            voice = 'mike'
+          elsif r == 2 then
+            voice = 'rich'
+          elsif r == 3 then
+            voice = 'lauren'
+          elsif r == 4 then
+            voice = 'claire'
+          end
         end
 
         title = article.title
@@ -256,7 +270,7 @@ class Article < ActiveRecord::Base
 
     request = Net::HTTP::Get.new(uri.request_uri)
 
-    request.set_form_data({"codec" => "wav", "ttsLang" => "en_US", "text" => text, "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038", "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093", "id" => "0000"})
+    request.set_form_data({"codec" => "wav", voice => voice, "ttsLang" => "en_US", "text" => text, "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038", "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093", "id" => "0000"})
 
     request = Net::HTTP::Get.new(uri.request_uri + '?' + request.body)
 
