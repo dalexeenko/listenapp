@@ -161,7 +161,12 @@ class Article < ActiveRecord::Base
         end
 
         title = article.title
-        title_url = self.generate_audio(title, voice)
+
+        if article.source_id == 13 then
+          title_url = self.generate_audio_nuance(title, voice)
+        else
+          title_url = self.generate_audio(title, voice)
+        end
 
         Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
 
@@ -170,7 +175,12 @@ class Article < ActiveRecord::Base
         number_of_preview_chunks = 0
 
         preview.each do |preview_chunk|
-          url = self.generate_audio(preview_chunk, voice)
+          if article.source_id == 13 then
+            url = self.generate_audio_nuance(preview_chunk, voice)
+          else
+            url = self.generate_audio(preview_chunk, voice)
+          end
+
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
           number_of_preview_chunks += 1
         end
@@ -178,7 +188,11 @@ class Article < ActiveRecord::Base
         body = split_into_chunks article.body
 
         body.each do |body_chunk|
-          url = self.generate_audio(body_chunk, voice)
+          if article.source_id == 13 then
+            url = self.generate_audio_nuance(body_chunk, voice)
+          else
+            url = self.generate_audio(body_chunk, voice)
+          end
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
         end
 
