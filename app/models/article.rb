@@ -94,15 +94,15 @@ class Article < ActiveRecord::Base
           elsif source.first.name.include? "CNN" then
             image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
           elsif source.first.name.include? "Ars Technica" then
-            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+            image_url = "https://talkieapp.s3.amazonaws.com/ars-logo.jpg"
           elsif source.first.name.include? "The Verge" then
-            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+            image_url = "https://talkieapp.s3.amazonaws.com/theverge-logo.jpg"
           elsif source.first.name.include? "The New York Times" then
-            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+            image_url = "https://talkieapp.s3.amazonaws.com/nyt-logo.jpg"
           elsif source.first.name.include? "Washington Post" then
-            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+            image_url = "https://talkieapp.s3.amazonaws.com/wp-logo.jpg"
           elsif source.first.name.include? "The Guardian" then
-            image_url = "https://talkieapp.s3.amazonaws.com/cnn-logo.jpg"
+            image_url = "https://talkieapp.s3.amazonaws.com/guardian-logo.jpg"
           end
         end
 
