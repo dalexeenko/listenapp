@@ -263,6 +263,7 @@ class Article < ActiveRecord::Base
   end
 
   def self.generate_audio_nuance(text, voice)
+    puts "Voice used is " + voice
     uri = URI.parse("https://tts.nuancemobility.net:443/NMDPTTSCmdServlet/tts")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
