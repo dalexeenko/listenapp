@@ -106,6 +106,10 @@ class Article < ActiveRecord::Base
           end
         end
 
+        if source.first.name.include? "The Guardian" then
+          image_url = "https://talkieapp.s3.amazonaws.com/guardian-logo.jpg"
+        end
+
         if entry.content.nil? then
           c = entry.summary
         else
