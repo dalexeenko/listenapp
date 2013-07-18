@@ -16,7 +16,7 @@ class DevicesController < ApplicationController
   # GET /devices/1
   # GET /devices/1.json
   def show
-    @device = Device.find(params[:id])
+    @device = Device.find(user_params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -37,13 +37,13 @@ class DevicesController < ApplicationController
 
   # GET /devices/1/edit
   def edit
-    @device = Device.find(params[:id])
+    @device = Device.find(user_params[:id])
   end
 
   # POST /devices
   # POST /devices.json
   def create
-    @device = Device.new(params[:device])
+    @device = Device.new(user_params[:device])
 
     respond_to do |format|
       if @device.save
@@ -59,10 +59,10 @@ class DevicesController < ApplicationController
   # PUT /devices/1
   # PUT /devices/1.json
   def update
-    @device = Device.find(params[:id])
+    @device = Device.find(user_params[:id])
 
     respond_to do |format|
-      if @device.update_attributes(params[:device])
+      if @device.update_attributes(user_params[:device])
         format.html { redirect_to @device, notice: 'Device was successfully updated.' }
         format.json { head :no_content }
       else
@@ -75,7 +75,7 @@ class DevicesController < ApplicationController
   # DELETE /devices/1
   # DELETE /devices/1.json
   def destroy
-    @device = Device.find(params[:id])
+    @device = Device.find(user_params[:id])
     @device.destroy
 
     respond_to do |format|
@@ -83,4 +83,10 @@ class DevicesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  private
+
+    def user_params
+      params.permit(:device_guid)
+    end
 end

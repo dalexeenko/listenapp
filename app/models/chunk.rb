@@ -10,6 +10,6 @@
 #
 
 class Chunk < ActiveRecord::Base
-  attr_accessible :audio_url, :body, :article_id
+  # attr_accessible :audio_url, :body, :article_id
   belongs_to :article
 end

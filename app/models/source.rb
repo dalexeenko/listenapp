@@ -14,5 +14,5 @@
 #
 
 class Source < ActiveRecord::Base
-  attr_accessible :description, :favicon_url, :image_url, :name, :rss_url, :source_url
+  # attr_accessible :description, :favicon_url, :image_url, :name, :rss_url, :source_url
 end
