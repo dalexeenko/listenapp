@@ -15,6 +15,7 @@ gem "htmlentities", "~> 4.3.1"
 gem "stanford-core-nlp", "~> 0.5.1"
 gem "addressable", "~> 2.3.4"
 gem "amatch", "~> 0.2.11"
+gem 'protected_attributes'
 
 group :development, :test do
   gem 'sqlite3', '1.3.7'
