@@ -5,19 +5,19 @@ class ArticlesController < ApplicationController
   # GET /articles
   # GET /articles.json
   def index
-    user_params[:count] ||= 3
-    user_params[:since_id]  ||= Article.order(:id).first
-    user_params[:max_id] ||= Article.order(:id).last
+    params[:count] ||= 3
+    params[:since_id]  ||= Article.order(:id).first
+    params[:max_id] ||= Article.order(:id).last
 
-    if user_params[:source_id].nil? then
+    if params[:source_id].nil? then
       @articles = Article.find :all,
-                               :conditions => ['id >= ? AND id <= ? AND preview_chunks IS NOT NULL AND preview_chunks != -1', user_params[:since_id], user_params[:max_id]],
-                               :limit => user_params[:count],
+                               :conditions => ['id >= ? AND id <= ? AND preview_chunks IS NOT NULL AND preview_chunks != -1', params[:since_id], params[:max_id]],
+                               :limit => params[:count],
                                :order => 'id desc'
     else
       @articles = Article.find :all,
-                               :conditions => ['id >= ? AND id <= ? AND preview_chunks IS NOT NULL AND preview_chunks != -1 AND source_id = ?', user_params[:since_id], user_params[:max_id], user_params[:source_id]],
-                               :limit => user_params[:count],
+                               :conditions => ['id >= ? AND id <= ? AND preview_chunks IS NOT NULL AND preview_chunks != -1 AND source_id = ?', params[:since_id], params[:max_id], params[:source_id]],
+                               :limit => params[:count],
                                :order => 'id desc'
     end
 
@@ -30,7 +30,7 @@ class ArticlesController < ApplicationController
   # GET /articles/1
   # GET /articles/1.json
   def show
-    @article = Article.find(user_params[:id])
+    @article = Article.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -51,13 +51,13 @@ class ArticlesController < ApplicationController
 
   # GET /articles/1/edit
   def edit
-    @article = Article.find(user_params[:id])
+    @article = Article.find(params[:id])
   end
 
   # POST /articles
   # POST /articles.json
   def create
-    @article = Article.new(user_params[:article])
+    @article = Article.new(user_params)
 
     respond_to do |format|
       if @article.save
@@ -73,10 +73,10 @@ class ArticlesController < ApplicationController
   # PUT /articles/1
   # PUT /articles/1.json
   def update
-    @article = Article.find(user_params[:id])
+    @article = Article.find(params[:id])
 
     respond_to do |format|
-      if @article.update_attributes(user_params[:article])
+      if @article.update_attributes(user_params)
         format.html { redirect_to @article, notice: 'Article was successfully updated.' }
         format.json { head :no_content }
       else
@@ -89,7 +89,7 @@ class ArticlesController < ApplicationController
   # DELETE /articles/1
   # DELETE /articles/1.json
   def destroy
-    @article = Article.find(user_params[:id])
+    @article = Article.find(params[:id])
     @article.destroy
 
     respond_to do |format|
@@ -101,6 +101,6 @@ class ArticlesController < ApplicationController
   private
 
     def user_params
-      params.permit(:article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title, :published_at)
+      params.require(:article).permit(:article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title, :published_at)
     end
 end

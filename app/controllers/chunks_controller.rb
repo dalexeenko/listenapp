@@ -16,7 +16,7 @@ class ChunksController < ApplicationController
   # GET /chunks/1
   # GET /chunks/1.json
   def show
-    @chunk = Chunk.find(user_params[:id])
+    @chunk = Chunk.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -37,13 +37,13 @@ class ChunksController < ApplicationController
 
   # GET /chunks/1/edit
   def edit
-    @chunk = Chunk.find(user_params[:id])
+    @chunk = Chunk.find(params[:id])
   end
 
   # POST /chunks
   # POST /chunks.json
   def create
-    @chunk = Chunk.new(user_params[:chunk])
+    @chunk = Chunk.new(user_params)
 
     respond_to do |format|
       if @chunk.save
@@ -59,10 +59,10 @@ class ChunksController < ApplicationController
   # PUT /chunks/1
   # PUT /chunks/1.json
   def update
-    @chunk = Chunk.find(user_params[:id])
+    @chunk = Chunk.find(params[:id])
 
     respond_to do |format|
-      if @chunk.update_attributes(user_params[:chunk])
+      if @chunk.update_attributes(user_params)
         format.html { redirect_to @chunk, notice: 'Chunk was successfully updated.' }
         format.json { head :no_content }
       else
@@ -75,7 +75,7 @@ class ChunksController < ApplicationController
   # DELETE /chunks/1
   # DELETE /chunks/1.json
   def destroy
-    @chunk = Chunk.find(user_params[:id])
+    @chunk = Chunk.find(params[:id])
     @chunk.destroy
 
     respond_to do |format|
@@ -87,6 +87,6 @@ class ChunksController < ApplicationController
   private
 
     def user_params
-      params.permit(:audio_url, :body, :article_id)
+      params.require(:chunk).permit(:audio_url, :body, :article_id)
     end
 end

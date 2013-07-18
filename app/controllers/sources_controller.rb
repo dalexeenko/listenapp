@@ -13,7 +13,7 @@ class SourcesController < ApplicationController
   # GET /sources/1
   # GET /sources/1.json
   def show
-    @source = Source.find(user_params[:id])
+    @source = Source.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -34,13 +34,13 @@ class SourcesController < ApplicationController
 
   # GET /sources/1/edit
   def edit
-    @source = Source.find(user_params[:id])
+    @source = Source.find(params[:id])
   end
 
   # POST /sources
   # POST /sources.json
   def create
-    @source = Source.new(user_params[:source])
+    @source = Source.new(user_params)
 
     respond_to do |format|
       if @source.save
@@ -56,10 +56,10 @@ class SourcesController < ApplicationController
   # PUT /sources/1
   # PUT /sources/1.json
   def update
-    @source = Source.find(user_params[:id])
+    @source = Source.find(params[:id])
 
     respond_to do |format|
-      if @source.update_attributes(user_params[:source])
+      if @source.update_attributes(user_params)
         format.html { redirect_to @source, notice: 'Source was successfully updated.' }
         format.json { head :no_content }
       else
@@ -72,7 +72,7 @@ class SourcesController < ApplicationController
   # DELETE /sources/1
   # DELETE /sources/1.json
   def destroy
-    @source = Source.find(user_params[:id])
+    @source = Source.find(params[:id])
     @source.destroy
 
     respond_to do |format|
@@ -84,6 +84,6 @@ class SourcesController < ApplicationController
   private
 
     def user_params
-      params.permit(:description, :favicon_url, :image_url, :name, :rss_url, :source_url)
+      params.require(:source).permit(:description, :favicon_url, :image_url, :name, :rss_url, :source_url)
     end
 end

@@ -6,7 +6,7 @@ class UsersController < ApplicationController
   # GET /users
   # GET /users.json
   def index
-    @users = User.paginate(page: user_params[:page])
+    @users = User.paginate(page: params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   # GET /users/1
   # GET /users/1.json
   def show
-    @user = User.find(user_params[:id])
+    @user = User.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   # GET /users/new
   # GET /users/new.json
   def new
-  	@user = User.new(user_params[:user])
+  	@user = User.new(user_params)
     if @user.save
       # Handle a successful save.
 
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   # POST /users
   # POST /users.json
   def create
-    @user = User.new(user_params[:user])
+    @user = User.new(user_params)
 
     respond_to do |format|
       if @user.save
@@ -68,7 +68,7 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     respond_to do |format|
-      if @user.update_attributes(user_params[:user])
+      if @user.update_attributes(user_params)
         format.html {
           flash[:success] = "Profile updated"
           sign_in @user
@@ -85,7 +85,7 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    User.find(user_params[:id]).destroy
+    User.find(params[:id]).destroy
     flash[:success] = "User destroyed."
 
     respond_to do |format|
@@ -96,11 +96,11 @@ class UsersController < ApplicationController
 
   private
     def correct_user
-      @user = User.find(user_params[:id])
+      @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
     end
 
     def user_params
-      params.permit(:name, :email, :password, :password_confirmation)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 end
