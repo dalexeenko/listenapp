@@ -2,11 +2,11 @@ source 'https://rubygems.org'
 ruby '2.0.0'
 
 gem 'rails', '4.0.0'
-gem 'bootstrap-sass', '2.1'
+gem 'bootstrap-sass', '2.3.2.0'
 gem 'bcrypt-ruby', '3.0.1'
-gem 'faker', '1.0.1'
-gem 'will_paginate', '3.0.3'
-gem 'bootstrap-will_paginate', '0.0.6'
+gem 'faker', '1.1.2'
+gem 'will_paginate', '3.0.4'
+gem 'bootstrap-will_paginate', '0.0.9'
 gem 'whenever', :require => false
 gem "feedzirra"
 gem "s3", "~> 0.3.11"
@@ -18,7 +18,7 @@ gem "amatch", "~> 0.2.11"
 
 group :development, :test do
   gem 'sqlite3', '1.3.7'
-  gem 'rspec-rails', '2.11.0'
+  gem 'rspec-rails', '2.13.1'
 end
 
 group :development do
@@ -37,8 +37,8 @@ end
 gem 'jquery-rails', '2.2.1'
 
 group :test do
-  gem 'capybara', '1.1.2'
-  gem 'factory_girl_rails', '4.1.0'
+  gem 'capybara', '2.1.0'
+  gem 'factory_girl_rails', '4.2.0'
 end
 
 group :production do
