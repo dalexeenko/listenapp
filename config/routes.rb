@@ -1,7 +1,4 @@
 SampleApp::Application.routes.draw do
-
-  patch :update_many
-
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
   resources :chunks
