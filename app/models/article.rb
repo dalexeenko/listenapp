@@ -122,7 +122,7 @@ class Article < ActiveRecord::Base
         sentences = generate_summary content
         summary = sentences[0]
 
-        next if content.nil? || content.length == 0
+        # next if content.nil? || content.length == 0
 
         content.slice! summary
         content.strip!
