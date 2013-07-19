@@ -239,6 +239,9 @@ class Article < ActiveRecord::Base
     #This interactive text-to-speech site is provided by AT&T solely
     # for demonstration purposes.  Any distribution, professional, or commercial use is
     # strictly disallowed. 
+
+    raise ArgumentError, "request is null" if request.nil?
+
     raise ArgumentError, "redirect location is nil! request: " + request.to_s + "; text: " + text if redirectLocation.nil?
 
     amazon = S3::Service.new(access_key_id: 'AKIAJMGKXIP5RHBHSMMA', secret_access_key: '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')
