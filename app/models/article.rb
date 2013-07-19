@@ -76,7 +76,7 @@ class Article < ActiveRecord::Base
 
     feed.entries.sort_by! { |e| e.published }
 
-    entry = feeds.entries.first
+    entry = feed.entries.first
 
     #feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
