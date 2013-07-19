@@ -27,7 +27,7 @@ require 'addressable/uri'
 include ActionView::Helpers::TextHelper
 
 class Article < ActiveRecord::Base
-  #attr_accessible :article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title, :published_at
+  attr_accessible :article_url, :author, :body, :image_url, :preview, :preview_chunks, :source_id, :title, :published_at
   has_many :chunks
 
   MAX_CHUNK_SIZE = 300

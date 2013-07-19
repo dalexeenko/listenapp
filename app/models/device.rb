@@ -9,5 +9,5 @@
 #
 
 class Device < ActiveRecord::Base
-  #attr_accessible :device_guid
+  attr_accessible :device_guid
 end
