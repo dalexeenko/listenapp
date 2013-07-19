@@ -76,9 +76,7 @@ class Article < ActiveRecord::Base
 
     feed.entries.sort_by! { |e| e.published }
 
-    entry = feed.entries.first
-
-    #feed.entries.each do |entry|
+    feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
 
         source = Source.all :conditions => { :rss_url => feed_url }
@@ -122,7 +120,7 @@ class Article < ActiveRecord::Base
         sentences = generate_summary content
         summary = sentences[0]
 
-        # next if content.nil? || content.length == 0
+        next if content.nil? || content.length == 0
 
         content.slice! summary
         content.strip!
@@ -141,7 +139,7 @@ class Article < ActiveRecord::Base
           :body => content
         )
       end
-    #end
+    end
 
     puts "hi!"
   end
@@ -242,9 +240,7 @@ class Article < ActiveRecord::Base
     # implementation+of+the+Notification+Center+is+that+it+required+you+to+unlock+your+device.&speakButton=SPEAK' http://192.20.225.36/tts/cgi-bin/nph-nvdemo
     #This interactive text-to-speech site is provided by AT&T solely
     # for demonstration purposes.  Any distribution, professional, or commercial use is
-    # strictly disallowed. 
-
-    raise ArgumentError, "request is null" if request.nil?
+    # strictly disallowed.
 
     raise ArgumentError, "redirect location is nil! request: " + request.to_s + "; text: " + text if redirectLocation.nil?
 
