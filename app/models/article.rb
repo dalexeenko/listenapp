@@ -140,8 +140,6 @@ class Article < ActiveRecord::Base
         )
       end
     end
-
-    puts "hi!"
   end
 
   def self.populate_articles
