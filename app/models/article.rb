@@ -76,7 +76,9 @@ class Article < ActiveRecord::Base
 
     feed.entries.sort_by! { |e| e.published }
 
-    feed.entries.each do |entry|
+    entry = feeds.entries.first
+
+    #feed.entries.each do |entry|
       unless exists? :article_url => entry.entry_id
 
         source = Source.all :conditions => { :rss_url => feed_url }
@@ -139,7 +141,9 @@ class Article < ActiveRecord::Base
           :body => content
         )
       end
-    end
+    #end
+
+    puts "hi!"
   end
 
   def self.populate_articles
