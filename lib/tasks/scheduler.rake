@@ -3,13 +3,19 @@ task :update_feed => :environment do
 	#if (Time.now.hour % 4) == 0
 		puts "Fetching articles..."
 		Article.update_from_feed('http://feeds.feedburner.com/TechCrunch/')
-		Article.update_from_feed('http://rss.cnn.com/rss/cnn_topstories.rss')
+		#Article.update_from_feed('http://rss.cnn.com/rss/cnn_topstories.rss')
 		Article.update_from_feed('http://feeds.arstechnica.com/arstechnica/index')
 		Article.update_from_feed('http://www.theverge.com/rss/index.xml')
 		Article.update_from_feed('http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
 		Article.update_from_feed('http://feeds.washingtonpost.com/rss/politics')
 		Article.update_from_feed('http://feeds.guardian.co.uk/theguardian/us-home/rss')
-		Article.populate_articles
+
+		Article.update_from_feed('http://syndication.eonline.com/syndication/feeds/rssfeeds/topstories.xml')
+		Article.update_from_feed('http://www.huffingtonpost.com/feeds/verticals/entertainment/index.xml')
+		Article.update_from_feed('http://sports.yahoo.com/top/rss.xml')
+		Article.update_from_feed('http://www.huffingtonpost.com/feeds/verticals/sports/index.xml')
+
+		# Article.populate_articles
 		puts "Done."
 	#end
 
