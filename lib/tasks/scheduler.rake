@@ -13,7 +13,7 @@ task :update_feed => :environment do
 		Article.update_from_feed('http://www.huffingtonpost.com/feeds/verticals/entertainment/index.xml')
 		Article.update_from_feed('http://sports.yahoo.com/top/rss.xml')
 		Article.update_from_feed('http://www.huffingtonpost.com/feeds/verticals/sports/index.xml')
-		# Article.populate_articles
+		Article.populate_articles
 		puts "Done."
 	#end
 
