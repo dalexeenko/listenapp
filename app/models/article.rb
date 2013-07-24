@@ -81,13 +81,17 @@ class Article < ActiveRecord::Base
 
         source = Source.all :conditions => { :rss_url => feed_url }
 
-        if !(Nokogiri(entry.summary)/"img").at_css("img").nil? && source.first.name.include? "TechCrunch" then
-          image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
-          params = image_url.query_values
-          params.delete('crop')
-          params['w'] = (params['w'].to_i * 2).to_s
-          params['h'] = (params['h'].to_i * 2).to_s
-          image_url.query_values = params
+        if !(Nokogiri(entry.summary)/"img").at_css("img").nil? then
+          if source.first.name.include? "TechCrunch" then 
+            image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
+            params = image_url.query_values
+            params.delete('crop')
+            params['w'] = (params['w'].to_i * 2).to_s
+            params['h'] = (params['h'].to_i * 2).to_s
+            image_url.query_values = params
+          else
+            image_url = "https://talkieapp.s3.amazonaws.com/techcrunch-logo.jpg"
+          end
         else
           if source.first.name.include? "TechCrunch" then
             image_url = "https://talkieapp.s3.amazonaws.com/techcrunch-logo.jpg"
