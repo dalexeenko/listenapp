@@ -82,7 +82,6 @@ class Article < ActiveRecord::Base
         source = Source.all :conditions => { :rss_url => feed_url }
 
         if (!(Nokogiri(entry.summary)/"img").at_css("img").nil?) && (source.first.name.include? "TechCrunch") then
-          if source.first.name.include? "TechCrunch" then 
             image_url = Addressable::URI.parse((Nokogiri(entry.summary)/"img").at_css("img")['src'])
             params = image_url.query_values
             params.delete('crop')
