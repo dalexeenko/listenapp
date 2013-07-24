@@ -180,11 +180,11 @@ class Article < ActiveRecord::Base
 
         title = article.title
 
-        if article.source_id == 13 then
-          title_url = self.generate_audio_nuance(title, voice)
-        else
-          title_url = self.generate_audio(title, voice)
-        end
+        #if article.source_id == 13 then
+        #  title_url = self.generate_audio_nuance(title, voice)
+        #else
+          title_url = self.generate_audio_bing(title, voice)
+        #end
 
         Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
 
@@ -193,11 +193,11 @@ class Article < ActiveRecord::Base
         number_of_preview_chunks = 0
 
         preview.each do |preview_chunk|
-          if article.source_id == 13 then
-            url = self.generate_audio_nuance(preview_chunk, voice)
-          else
-            url = self.generate_audio(preview_chunk, voice)
-          end
+          #if article.source_id == 13 then
+          #  url = self.generate_audio_nuance(preview_chunk, voice)
+          #else
+            url = self.generate_audio_bing(preview_chunk, voice)
+          #end
 
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
           number_of_preview_chunks += 1
@@ -206,11 +206,11 @@ class Article < ActiveRecord::Base
         body = split_into_chunks article.body
 
         body.each do |body_chunk|
-          if article.source_id == 13 then
-            url = self.generate_audio_nuance(body_chunk, voice)
-          else
-            url = self.generate_audio(body_chunk, voice)
-          end
+          #if article.source_id == 13 then
+          #  url = self.generate_audio_nuance(body_chunk, voice)
+          #else
+            url = self.generate_audio_bing(body_chunk, voice)
+          #end
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
         end
 
@@ -302,6 +302,49 @@ class Article < ActiveRecord::Base
 
     file = bucket.objects.build(SecureRandom.uuid + '.mp3')
     file.content = (File.read mp3)
+
+    if file.save
+      print file.url
+    end
+
+    file.url
+  end
+
+  def self.generate_audio_bing(text, voice)
+    clientID = "listenapp"
+    clientSecret = "Q7fSU9UNs1lNbEtxzMcozmAp/hB6vocQoGoxwpOlGJg="
+    authUrl = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13/"
+    scopeUrl = "http://api.microsofttranslator.com"
+    grantType = "client_credentials"
+
+    uri = URI.parse(authUrl)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request.set_form_data({"client_id" => clientID, "client_secret" => clientSecret, "grant_type" => grantType, "scope" => scopeUrl})
+    response = http.request(request)
+
+    access_token = JSON.parse(response.body)["access_token"]
+    
+    uri = URI.parse("http://api.microsofttranslator.com/V2/Http.svc/Speak")
+    http = Net::HTTP.new(uri.host, uri.port)
+
+    request = Net::HTTP::Get.new(uri.request_uri)
+
+    request.set_form_data({"text" => "hello amanda panda", "language" => "en", "format" => "audio/mp3"})
+
+    request = Net::HTTP::Get.new(uri.request_uri + '?' + request.body)
+    request["Authorization"] = "Bearer " + access_token
+
+    response = http.request(request)
+
+    amazon = S3::Service.new(access_key_id: 'AKIAJMGKXIP5RHBHSMMA', secret_access_key: '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')
+    bucket = amazon.buckets.find('talkieapp')
+
+    file = bucket.objects.build(SecureRandom.uuid + '.mp3')
+    file.content = response.body
 
     if file.save
       print file.url
