@@ -327,13 +327,13 @@ class Article < ActiveRecord::Base
     response = http.request(request)
 
     access_token = JSON.parse(response.body)["access_token"]
-    
+
     uri = URI.parse("http://api.microsofttranslator.com/V2/Http.svc/Speak")
     http = Net::HTTP.new(uri.host, uri.port)
 
     request = Net::HTTP::Get.new(uri.request_uri)
 
-    request.set_form_data({"text" => "hello amanda panda", "language" => "en", "format" => "audio/mp3"})
+    request.set_form_data({"text" => text, "language" => "en", "format" => "audio/mp3"})
 
     request = Net::HTTP::Get.new(uri.request_uri + '?' + request.body)
     request["Authorization"] = "Bearer " + access_token
