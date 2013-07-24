@@ -9,12 +9,10 @@ task :update_feed => :environment do
 		Article.update_from_feed('http://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
 		Article.update_from_feed('http://feeds.washingtonpost.com/rss/politics')
 		Article.update_from_feed('http://feeds.guardian.co.uk/theguardian/us-home/rss')
-
 		Article.update_from_feed('http://syndication.eonline.com/syndication/feeds/rssfeeds/topstories.xml')
 		Article.update_from_feed('http://www.huffingtonpost.com/feeds/verticals/entertainment/index.xml')
 		Article.update_from_feed('http://sports.yahoo.com/top/rss.xml')
 		Article.update_from_feed('http://www.huffingtonpost.com/feeds/verticals/sports/index.xml')
-
 		# Article.populate_articles
 		puts "Done."
 	#end
