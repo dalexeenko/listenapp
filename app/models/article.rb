@@ -204,7 +204,7 @@ class Article < ActiveRecord::Base
           if article.source_id == 13 then
             url = self.generate_audio_nuance(preview_chunk, voice)
           elsif article.source_id == 19 then
-            url = self.generate_audio_bing(title, voice)
+            url = self.generate_audio_bing(preview_chunk, voice)
           else
             url = self.generate_audio(preview_chunk, voice)
           end
@@ -219,7 +219,7 @@ class Article < ActiveRecord::Base
           if article.source_id == 13 then
             url = self.generate_audio_nuance(body_chunk, voice)
           elsif article.source_id == 19 then
-            url = self.generate_audio_bing(title, voice)
+            url = self.generate_audio_bing(body_chunk, voice)
           else
             url = self.generate_audio(body_chunk, voice)
           end
