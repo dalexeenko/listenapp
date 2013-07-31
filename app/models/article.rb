@@ -131,6 +131,10 @@ class Article < ActiveRecord::Base
         content.slice! summary
         content.strip!
 
+        if source.first.name.include? "Washington Post" then
+          summary.slice! "Read full article \u003E\u003E"
+        end
+
         puts "Title: " + entry.title.strip + "\n"
         puts "Summary: " + summary + "\n"
 
