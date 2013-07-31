@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :email, :password, :password_confirmation
   has_secure_password
 
-  before_save { |user| user.email = email.downcase }
+  before_save { |user| if !email.nil? then user.email = email.downcase end }
   before_save :create_remember_token
 
   validates :name, presence: true, length: { maximum: 50 }
