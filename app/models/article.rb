@@ -195,7 +195,7 @@ class Article < ActiveRecord::Base
         elsif article.source_id == 19 then
           title_url = self.generate_audio_bing(title, voice)
         else
-          title_url = self.generate_audio(title, voice)
+          title_url = self.generate_audio_bing(title, voice)
         end
 
         Chunk.create!(:article_id => article.id, :audio_url => title_url, :body => title)
@@ -210,7 +210,7 @@ class Article < ActiveRecord::Base
           elsif article.source_id == 19 then
             url = self.generate_audio_bing(preview_chunk, voice)
           else
-            url = self.generate_audio(preview_chunk, voice)
+            url = self.generate_audio_bing(preview_chunk, voice)
           end
 
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => preview_chunk)
@@ -225,7 +225,7 @@ class Article < ActiveRecord::Base
           elsif article.source_id == 19 then
             url = self.generate_audio_bing(body_chunk, voice)
           else
-            url = self.generate_audio(body_chunk, voice)
+            url = self.generate_audio_bing(body_chunk, voice)
           end
           Chunk.create!(:article_id => article.id, :audio_url => url, :body => body_chunk)
         end
