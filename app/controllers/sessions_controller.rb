@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   # POST /sessions
   # POST /sessions.json
   def create
-    user = User.find_by_email(params[:session][:email].downcase)
+    user = User.find_by_name(params[:session][:name].downcase)
 
     respond_to do |format|
       if user && user.authenticate(params[:session][:password])
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
         format.json { render :json => { :success => true }, :status => :ok }
       else
         format.html {
-          flash.now[:error] = 'Invalid email/password combination'
+          flash.now[:error] = 'Invalid name/password combination'
           render 'new'
         }
         format.json { render :json => { :success => false }, status: :unauthorized }
