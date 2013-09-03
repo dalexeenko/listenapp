@@ -105,7 +105,7 @@ class Article < ActiveRecord::Base
             image_url = "https://talkieapp.s3.amazonaws.com/guardian-logo.jpg"
           elsif source.first.name.include? "E! Online" then
             image_url = "https://talkieapp.s3.amazonaws.com/eonline-logo.jpg"
-          elsif source.first.name.include? "HuffingtonPost" then
+          elsif source.first.name.include? "Huffpost" then
             image_url = "https://talkieapp.s3.amazonaws.com/huffington-logo.jpg"
           elsif source.first.name.include? "Yahoo" then
             image_url = "https://talkieapp.s3.amazonaws.com/yahoo-logo.jpg"
@@ -191,7 +191,7 @@ class Article < ActiveRecord::Base
         title = article.title
 
         if article.source_id == 13 then
-          title_url = self.generate_audio_nuance(title, voice)
+          title_url = self.generate_audio_bing(title, voice)
         elsif article.source_id == 19 then
           title_url = self.generate_audio_bing(title, voice)
         else
@@ -206,7 +206,7 @@ class Article < ActiveRecord::Base
 
         preview.each do |preview_chunk|
           if article.source_id == 13 then
-            url = self.generate_audio_nuance(preview_chunk, voice)
+            url = self.generate_audio_bing(preview_chunk, voice)
           elsif article.source_id == 19 then
             url = self.generate_audio_bing(preview_chunk, voice)
           else
@@ -221,7 +221,7 @@ class Article < ActiveRecord::Base
 
         body.each do |body_chunk|
           if article.source_id == 13 then
-            url = self.generate_audio_nuance(body_chunk, voice)
+            url = self.generate_audio_bing(body_chunk, voice)
           elsif article.source_id == 19 then
             url = self.generate_audio_bing(body_chunk, voice)
           else
