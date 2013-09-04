@@ -6,7 +6,7 @@ class SessionsController < ApplicationController
   # POST /sessions
   # POST /sessions.json
   def create
-    user = User.find_by_name(params[:session][:name].downcase)
+    user = User.find_by_name(params[:session][:name])
 
     respond_to do |format|
       if user && user.authenticate(params[:session][:password])
