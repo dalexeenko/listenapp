@@ -182,10 +182,10 @@ class Article < ActiveRecord::Base
   # Fetches articles from RSS feeds and generates audio chunks for them
   #
   def self.populate_articles
-    articles = Article.find
+    articles = Article.find(
       :all,
       :order => 'id desc',
-      :conditions => "preview_chunks IS NULL"
+      :conditions => "preview_chunks IS NULL")
 
     articles.each do |article|
       begin
