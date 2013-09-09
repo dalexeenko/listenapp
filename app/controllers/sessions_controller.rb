@@ -8,6 +8,8 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by_name(params[:session][:name])
 
+    Keen.publish("sessions", { :user_id => user.id })
+
     respond_to do |format|
       if user && user.authenticate(params[:session][:password])
         sign_in user

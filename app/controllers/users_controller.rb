@@ -50,6 +50,8 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
 
+    Keen.publish("users", { :user_id => @user.id, :user_name => @user.name })
+
     respond_to do |format|
       if @user.save
         format.html {
