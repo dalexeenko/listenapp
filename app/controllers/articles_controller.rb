@@ -30,6 +30,8 @@ class ArticlesController < ApplicationController
   # GET /articles/1
   # GET /articles/1.json
   def show
+    Keen.publish("articles", { :article_id => params[:id] })
+
     @article = Article.find(params[:id])
 
     respond_to do |format|

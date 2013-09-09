@@ -397,7 +397,7 @@ class Article < ActiveRecord::Base
   def self.convert_tempfile(tempfile)
     dst = Tempfile.new(".mp3")
 
-    # Converting mp3 to mp3 with smallest file size and reasonable quality
+    # Converting mp3 to mp3 with smallest file size and reasonable quality.
     # See http://macintoshhowto.com/audio/how-to-compress-speech.html for
     # more info regarding lame parameters
     cmd_args = [
