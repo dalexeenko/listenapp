@@ -411,8 +411,7 @@ class Article < ActiveRecord::Base
       File.expand_path(tempfile.path),
       File.expand_path(dst.path)]
 
-    #system("bin/lame", *cmd_args)
-    system("/usr/local/bin/lame", *cmd_args)
+    system("bin/lame", *cmd_args)
 
     dst.binmode
     dst.path
