@@ -402,16 +402,17 @@ class Article < ActiveRecord::Base
     # more info regarding lame parameters
     cmd_args = [
       "--mp3input",
-      "--abr",
-      "16",
+      "--abr", # average bitrate
+      "8", # kbps
       "-q",
-      "0",
+      "0", # best quality available at this bitrate
       "-m",
-      "m",
+      "m", # mono
       File.expand_path(tempfile.path),
       File.expand_path(dst.path)]
 
-    system("bin/lame", *cmd_args)
+    #system("bin/lame", *cmd_args)
+    system("/usr/local/bin/lame", *cmd_args)
 
     dst.binmode
     dst.path
