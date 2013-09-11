@@ -403,7 +403,7 @@ class Article < ActiveRecord::Base
     cmd_args = [
       "--mp3input",
       "--abr", # average bitrate
-      "8", # kbps
+      "16", # kbps
       "-q",
       "0", # best quality available at this bitrate
       "-m",
