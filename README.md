@@ -1,5 +1,33 @@
 # ListenApp server code
 
+## Runtime credentials
+
+Supply credentials through the process environment or your deployment secret
+manager. Do not commit credential values to this repository. This application
+does not automatically load a local `.env` file.
+
+| Environment variable | Required for |
+| --- | --- |
+| `RAILS_SECRET_TOKEN` | Rails startup in every environment; use a new random secret of at least 30 characters. |
+| `AWS_ACCESS_KEY_ID` | Uploading generated audio to S3. |
+| `AWS_SECRET_ACCESS_KEY` | Uploading generated audio to S3. |
+| `NUANCE_APP_ID` | Nuance text-to-speech requests. |
+| `NUANCE_APP_KEY` | Nuance text-to-speech requests. |
+| `BING_CLIENT_ID` | Bing text-to-speech requests. |
+| `BING_CLIENT_SECRET` | Bing text-to-speech requests. |
+
+The application uses `ENV.fetch` so missing configuration fails explicitly rather
+than using a shared credential. Provider credentials are needed only when that
+provider is used. Generate and store `RAILS_SECRET_TOKEN` securely before any
+Rails command or server startup; keep it consistent across instances of the same
+deployment. Changing it invalidates existing signed cookies.
+
+Previously committed credentials must be treated as exposed. Removing them from
+the current source does not revoke them or remove Git history and existing
+clones. Before running the app again, revoke or rotate the old AWS, Nuance, and
+Bing credentials, review provider access, and use a new Rails signing secret.
+The example authentication values below are placeholders.
+
 This is the server part of ListenApp app. Its purpose is to regularly fetch
 articles from specified RSS feeds, generate audio chunks for them and save
 articles and chunks in the database.
@@ -63,8 +91,8 @@ Location: https://talkieapp-staging.herokuapp.com/users/1
   "created_at":"2013-05-19T19:12:16Z",
   "email":"nicki@gmail.com",
   "id":1,"name":"nicki",
-  "password_digest":"$2a$10$lyo8pBhRMUL.Tc/kbi5TCuU06m3..ZrWBtZ.BesomLYXPG7W6y",
-  "remember_token":"ruAMVQcutaHb19SdJFWnYA",
+  "password_digest":"<PASSWORD_DIGEST>",
+  "remember_token":"<REMEMBER_TOKEN>",
   "updated_at":"2013-05-19T19:12:16Z"
 }
 
@@ -90,13 +118,13 @@ that the client will need to store:
 
 HTTP/1.1 302 Found 
 Content-Type: application/json; charset=utf-8
-Set-Cookie: remember_token=zYgDdhQd0EXqGZgcf9e1RQ; path=/; expires=Thu, 19-May-2033 19:26:19 GMT; secure
+Set-Cookie: remember_token=<REMEMBER_TOKEN>; path=/; expires=Thu, 19-May-2033 19:26:19 GMT; secure
 
 After that the client can make requests to access Talkie resources:
 
 GET /articles.json HTTP/1.1
 Host: talkieapp-staging.herokuapp.com
-Cookie: remember_token=zYgDdhQd0EXqGZgcf9e1RQ
+Cookie: remember_token=<REMEMBER_TOKEN>
 Accept: application/json
 
 $ curl -v -H "Accept: application/json" -b cookies https://talkieapp-staging.herokuapp.com/articles.json

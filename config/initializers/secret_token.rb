@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-SampleApp::Application.config.secret_token = '20c39545df2a8d244c08460bc627a3f13b31b306906380b151da693002b491d1ee0fd853bf3700499cabafd22cbd5936e68a1fd0beb9c6cd2f332aa7f19bcbe9'
+SampleApp::Application.config.secret_token = ENV.fetch('RAILS_SECRET_TOKEN')

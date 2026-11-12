@@ -242,8 +242,8 @@ class Article < ActiveRecord::Base
       "; text: " + text if redirectLocation.nil?
 
     amazon = S3::Service.new(
-      access_key_id: 'AKIAJMGKXIP5RHBHSMMA',
-      secret_access_key: '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')
+      access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
+      secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'))
     bucket = amazon.buckets.find('talkieapp')
     url = 'http://192.20.225.36' + redirectLocation
 
@@ -284,8 +284,8 @@ class Article < ActiveRecord::Base
         voice => voice,
         "ttsLang" => "en_US",
         "text" => text,
-        "appId" => "NMDPTRIAL_dmitry_alexeenko20130627022038",
-        "appKey" => "79711b1aad792b84364c85d3f633551286d6645570b657959c272dd0c6449e3fb5b959623384e769d06c3cc69f91d925673d7bd7f3d26d8ffa9a60c0defe0093",
+        "appId" => ENV.fetch('NUANCE_APP_ID'),
+        "appKey" => ENV.fetch('NUANCE_APP_KEY'),
         "id" => "0000"})
 
     request = Net::HTTP::Get.new(uri.request_uri + '?' + request.body)
@@ -295,8 +295,8 @@ class Article < ActiveRecord::Base
     raise ArgumentError, "Exceeded max number of transactions per day." if response.code == "503"
 
     amazon = S3::Service.new(
-      access_key_id: 'AKIAJMGKXIP5RHBHSMMA', 
-      secret_access_key: '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')
+      access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
+      secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'))
     bucket = amazon.buckets.find('talkieapp')
 
     open("tempfile_nuance.wav", "wb") do |file|
@@ -324,8 +324,8 @@ class Article < ActiveRecord::Base
 
   # Bing text-to-speech
   def self.generate_audio_bing(text, voice)
-    clientID = "listenapp"
-    clientSecret = "Q7fSU9UNs1lNbEtxzMcozmAp/hB6vocQoGoxwpOlGJg="
+    clientID = ENV.fetch('BING_CLIENT_ID')
+    clientSecret = ENV.fetch('BING_CLIENT_SECRET')
     authUrl = "https://datamarket.accesscontrol.windows.net/v2/OAuth2-13/"
     scopeUrl = "http://api.microsofttranslator.com"
     grantType = "client_credentials"
@@ -367,8 +367,8 @@ class Article < ActiveRecord::Base
     response = http.request(request)
 
     amazon = S3::Service.new(
-      access_key_id: 'AKIAJMGKXIP5RHBHSMMA',
-      secret_access_key: '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')
+      access_key_id: ENV.fetch('AWS_ACCESS_KEY_ID'),
+      secret_access_key: ENV.fetch('AWS_SECRET_ACCESS_KEY'))
     bucket = amazon.buckets.find('talkieapp')
 
     open("tempfile_bing.mp3", "wb") do |file|
