@@ -13,3 +13,7 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+
+# Keep local runtime credentials out of source control.
+/.env
+/.env.*
